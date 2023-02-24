@@ -10,7 +10,7 @@ const char *pass = "4255887227";
 const String deviceId = "aryan";
 
 const String columns[] = {
-        "Time",
+        "Time (UTC)",
         "E Humidity",
         "E Temperature",
         "E Heat Index",
