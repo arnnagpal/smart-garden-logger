@@ -28,20 +28,7 @@ ExcelEESD::ExcelEESD(const char *ssid, const char *password)
     Serial.print("IP: ");
     Serial.println(WiFi.localIP());
 
-    configTime(3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
-
-    Serial.print("Waiting for NTP time sync: ");
-    time_t now = time(nullptr);
-    while (now < 8 * 3600 * 2) {
-        delay(500);
-        Serial.print(".");
-        now = time(nullptr);
-    }
-    Serial.println("");
-    struct tm timeinfo{};
-    gmtime_r(&now, &timeinfo);
-    Serial.print("Current time: ");
-    Serial.print(asctime(&timeinfo));
+    getTime();
 
     delay(2000);
 
@@ -87,6 +74,26 @@ ExcelEESD::ExcelEESD(const char *ssid, const char *password)
 
 bool ExcelEESD::connected() const {
     return _connected;
+}
+
+String ExcelEESD::getTime() {
+    // sync with NTP
+    configTime(3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
+
+    Serial.print("Waiting for NTP time sync: ");
+    time_t now = time(nullptr);
+    while (now < 8 * 3600 * 2) {
+        delay(500);
+        Serial.print(".");
+        now = time(nullptr);
+    }
+    Serial.println("");
+    struct tm timeinfo{};
+    gmtime_r(&now, &timeinfo);
+    Serial.print("Current time: ");
+    String time = asctime(&timeinfo);
+    Serial.print(time);
+    return time;
 }
 
 int ExcelEESD::createExcelFile(const String& fileName, const String columnNames[], int columns) {

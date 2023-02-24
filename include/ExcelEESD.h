@@ -17,6 +17,8 @@ public:
 
     bool connected() const;
 
+    static String getTime();
+
     int createExcelFile(const String& fileName, const String columnNames[], int columns);
 
     JSONVar readExcelFile(const String& fileName);

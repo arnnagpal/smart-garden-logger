@@ -10,11 +10,16 @@ const char *pass = "4255887227";
 const String deviceId = "aryan";
 
 const String columns[] = {
+        "Time",
         "E Humidity",
         "E Temperature",
         "E Heat Index",
         "S Moisture",
-        "S Temperature"
+        "S Temperature",
+        "UV Light",
+        "VIS Light",
+        "IR Light"
+
 };
 
 ExcelEESD *excel;
@@ -75,6 +80,9 @@ void loop() {
             String eHIK = getValue(ardData, ';', 2);
             String sMK = getValue(ardData, ';', 3);
             String sTK = getValue(ardData, ';', 4);
+            String uVK = getValue(ardData, ';', 5);
+            String vIK = getValue(ardData, ';', 6);
+            String iRK = getValue(ardData, ';', 7);
 
 
             String eH = getValue(eHK, '=', 1);
@@ -82,19 +90,29 @@ void loop() {
             String eHI = getValue(eHIK, '=', 1);
             String sM = getValue(sMK, '=', 1);
             String sT = getValue(sTK, '=', 1);
+            String uV = getValue(uVK, '=', 1);
+            String vI = getValue(vIK, '=', 1);
+            String iR = getValue(iRK, '=', 1);
 
             eH.trim();
             eT.trim();
             eHI.trim();
             sM.trim();
             sT.trim();
+            uV.trim();
+            vI.trim();
+            iR.trim();
 
             String data[] = {
+                    ExcelEESD::getTime(),
                     eH,
                     eT,
                     eHI,
                     sM,
-                    sT
+                    sT,
+                    uV,
+                    vI,
+                    iR
             };
             excel->writeToExcelFile(deviceId, data, 5);
 
