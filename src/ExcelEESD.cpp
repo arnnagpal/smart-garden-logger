@@ -268,7 +268,7 @@ JSONVar ExcelEESD::postRequest(const String& endpoint, const JSONVar& body) {
     String line = client.readStringUntil('\n');
     JSONVar obj = JSON.parse(line);
     if (JSON.typeof(obj) == "undefined") {
-        Serial.println("Parsing JSON failed.");
+        Serial.println("Parsing JSON failed: " + line);
         return null;
     }
 
