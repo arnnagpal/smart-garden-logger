@@ -91,7 +91,9 @@ String ExcelEESD::getTime() {
     struct tm timeinfo{};
     gmtime_r(&now, &timeinfo);
     Serial.print("Current time: ");
-    String time = asctime(&timeinfo);
+    char buffer[80];
+    strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", localtime(&now));
+    String time = String(buffer);
     Serial.print(time);
     return time;
 }

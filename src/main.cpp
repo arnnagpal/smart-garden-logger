@@ -10,7 +10,7 @@ const char *pass = "4255887227";
 const String deviceId = "data-test-2";
 
 const String columns[] = {
-        "Time (UTC)",
+        "Time (PST)",
         "E Humidity",
         "E Temperature",
         "E Heat Index",
