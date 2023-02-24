@@ -78,7 +78,7 @@ bool ExcelEESD::connected() const {
 
 String ExcelEESD::getTime() {
     // sync with NTP
-    configTime(3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
+    configTime(-8 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 
     Serial.print("Waiting for NTP time sync: ");
     time_t now = time(nullptr);
@@ -94,7 +94,7 @@ String ExcelEESD::getTime() {
     char buffer[80];
     strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", localtime(&now));
     String time = String(buffer);
-    Serial.print(time);
+    Serial.println(time);
     return time;
 }
 
