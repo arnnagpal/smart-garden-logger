@@ -26,8 +26,7 @@ void webpage() {
 void setup() {
     // Open serial communications and wait for port to open:
     Serial.begin(9600);
-    while (!Serial) {
-        ;  // wait for serial port to connect. Needed for native USB port only
+    while (!Serial) { ;  // wait for serial port to connect. Needed for native USB port only
     }
     excel = new ExcelEESD(ssid, pass);
     while (!excel->connected()) { ;
@@ -46,7 +45,7 @@ void setup() {
     }
 }
 
-String getValue(const String& data, char separator, int index) {
+String getValue(const String &data, char separator, int index) {
     int found = 0;
     int strIndex[] = {0, -1};
     int maxIndex = data.length() - 1;

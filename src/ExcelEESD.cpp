@@ -38,7 +38,7 @@ ExcelEESD::ExcelEESD(const char *ssid, const char *password)
         now = time(nullptr);
     }
     Serial.println("");
-    struct tm timeinfo;
+    struct tm timeinfo{};
     gmtime_r(&now, &timeinfo);
     Serial.print("Current time: ");
     Serial.print(asctime(&timeinfo));
@@ -85,24 +85,23 @@ ExcelEESD::ExcelEESD(const char *ssid, const char *password)
     delay(5000);
 }
 
-bool ExcelEESD::connected() {
+bool ExcelEESD::connected() const {
     return _connected;
 }
 
-int ExcelEESD::createExcelFile(String fileName, const String columnNames[], int columns) {
+int ExcelEESD::createExcelFile(const String& fileName, const String columnNames[], int columns) {
     if ((WiFiMulti.run() != WL_CONNECTED)) {
         Serial.println("Not connected");
         return -1;
     }
 
-    String contentType = "application/json";
-    String content = "{\"rows\":[],\"columns\":[";
+    String content = R"({"rows":[],"columns":[)";
 
     for (int i = 0; i < columns; i++) {
         if (i != 0) {
             content.concat(",");
         }
-        content.concat("{\"width\":\"250px\"}");
+        content.concat(R"({"width":"250px"})");
     }
     content.concat("],\"data\":[[");
 
@@ -113,10 +112,10 @@ int ExcelEESD::createExcelFile(String fileName, const String columnNames[], int 
         content.concat("\"" + columnNames[i] + "\"");
     }
 
-    content.concat("]],\"style\":{},\"sheetName\":\"");
+    content.concat(R"(]],"style":{},"sheetName":")");
 
     content.concat(fileName);
-    content.concat("\",\"mergeCells\":[]}");
+    content.concat(R"(","mergeCells":[]})");
 
     JSONVar postData;
     postData["fileName"] = fileName;
@@ -145,7 +144,7 @@ int ExcelEESD::createExcelFile(String fileName, const String columnNames[], int 
     return -1;
 }
 
-JSONVar ExcelEESD::readExcelFile(String file) {
+JSONVar ExcelEESD::readExcelFile(const String& file) {
     if ((WiFiMulti.run() != WL_CONNECTED)) {
         Serial.println("Not connected");
         return null;
@@ -165,14 +164,11 @@ JSONVar ExcelEESD::readExcelFile(String file) {
     if (msg == "File read") {
         Serial.println("Reading file JSON");
         String fileRawText = (String) response["data"]["file"];
-        JSONVar file = JSON.parse(fileRawText);
-        if (JSON.typeof(file) == "undefined") {
+        JSONVar fileJSON = JSON.parse(fileRawText);
+        if (JSON.typeof(fileJSON) == "undefined") {
             Serial.println("Parsing JSON failed.");
             return null;
         }
-
-        Serial.print("JSON.typeof(file) = ");
-        Serial.println(JSON.typeof(file));
 
         return file;
     }
@@ -181,7 +177,7 @@ JSONVar ExcelEESD::readExcelFile(String file) {
     return null;
 }
 
-bool ExcelEESD::writeToExcelFile(String fileName, String data[], int length) {
+bool ExcelEESD::writeToExcelFile(const String& fileName, String data[], int length) {
     if ((WiFiMulti.run() != WL_CONNECTED)) {
         Serial.println("Not connected");
         return false;
@@ -224,7 +220,7 @@ bool ExcelEESD::writeToExcelFile(String fileName, String data[], int length) {
 
 String ExcelEESD::getMessage(JSONVar obj) {
     if (obj.hasOwnProperty("data")) {
-        Serial.print("Object has data, obj[\"data\"][\"message\"] = ");
+        Serial.print(R"(Object has data, obj["data"]["message"] = )");
         String msg = (String) obj["data"]["message"];
         Serial.println(msg);
 
@@ -234,7 +230,7 @@ String ExcelEESD::getMessage(JSONVar obj) {
     return "Error";
 }
 
-JSONVar ExcelEESD::postRequest(String endpoint, JSONVar body) {
+JSONVar ExcelEESD::postRequest(const String& endpoint, const JSONVar& body) {
     if (!client.connect(eesd_host, eesd_port)) {
         Serial.println("Connection failed");
         return null;
@@ -270,7 +266,7 @@ JSONVar ExcelEESD::postRequest(String endpoint, JSONVar body) {
     return obj;
 }
 
-JSONVar ExcelEESD::getRequest(String endpoint) {
+JSONVar ExcelEESD::getRequest(const String& endpoint) {
     if (!client.connect(eesd_host, eesd_port)) {
         Serial.println("Connection failed");
         return null;
@@ -278,7 +274,6 @@ JSONVar ExcelEESD::getRequest(String endpoint) {
         Serial.println("Connection to server successful.");
     }
 
-    String contentType = "application/json";
     String request = "GET " + endpoint + " HTTP/1.1\r\n";
     request += "Host: " + String(eesd_host) + "\r\n";
     request += "Connection: close\r\n\r\n";

@@ -15,24 +15,24 @@ class ExcelEESD {
 public:
     ExcelEESD(const char *ssid, const char *password);
 
-    bool connected();
+    bool connected() const;
 
-    int createExcelFile(String fileName, const String columnNames[], int columns);
+    int createExcelFile(const String& fileName, const String columnNames[], int columns);
 
-    JSONVar readExcelFile(String fileName);
+    JSONVar readExcelFile(const String& fileName);
 
-    bool writeToExcelFile(String fileName, String data[], int length);
+    bool writeToExcelFile(const String& fileName, String data[], int length);
 
 private:
     X509List _cert;
     ESP8266WiFiMulti WiFiMulti;
     bool _connected;
 
-    String getMessage(JSONVar obj);
+    static String getMessage(JSONVar obj);
 
-    JSONVar postRequest(String endpoint, JSONVar body);
+    static JSONVar postRequest(const String& endpoint, const JSONVar& body);
 
-    JSONVar getRequest(String endpoint);
+    static JSONVar getRequest(const String& endpoint);
 };
 
 #endif
