@@ -15,7 +15,7 @@ class ExcelEESD {
 public:
     ExcelEESD(const char *ssid, const char *password);
 
-    bool connected() const;
+    [[nodiscard]] bool connected() const;
 
     static String getTime();
 

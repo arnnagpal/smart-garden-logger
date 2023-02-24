@@ -48,6 +48,33 @@ void setup() {
     } else if (a == -1) {
         Serial.println("Could not create excel file, network/server error.");
     }
+
+    Serial.println("Setup complete");
+
+    // append fake data to test
+    // example data:
+    // "Item[]" : Fri Feb 24 09:59:16 2023
+    // "Item[]" : 40
+    // "Item[]" : 20
+    // "Item[]" : 19.1
+    // "Item[]" : 742
+    // "Item[]" : 18.88
+    // "Item[]" : 0.01
+    // "Item[]" : 5
+    // "Item[]" : 19
+
+    String data[] = {
+            ExcelEESD::getTime(),
+            "40",
+            "20",
+            "19.1",
+            "742",
+            "18.88",
+            "0.01",
+            "5",
+            "19"
+    };
+    excel->writeToExcelFile(deviceId, data, 9);
 }
 
 String getValue(const String &data, char separator, int index) {
@@ -114,7 +141,7 @@ void loop() {
                     vI,
                     iR
             };
-            excel->writeToExcelFile(deviceId, data, 5);
+            excel->writeToExcelFile(deviceId, data, 9);
 
             ardData = "";
         } else {

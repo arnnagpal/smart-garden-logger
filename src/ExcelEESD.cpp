@@ -108,7 +108,7 @@ int ExcelEESD::createExcelFile(const String& fileName, const String columnNames[
         if (i != 0) {
             content.concat(",");
         }
-        content.concat(R"({"width":"250px"})");
+        content.concat(R"({"width":"200px"})");
     }
     content.concat("],\"data\":[[");
 
