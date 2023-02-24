@@ -7,7 +7,7 @@ ESP8266WebServer server(80);
 // Replace with your network credentials
 const char *ssid = "PEACE";
 const char *pass = "4255887227";
-const String deviceId = "aryan";
+const String deviceId = "data-test-2";
 
 const String columns[] = {
         "Time (UTC)",
@@ -40,7 +40,7 @@ void setup() {
     server.on("/", webpage);
     server.begin();
 
-    int a = excel->createExcelFile(deviceId, columns, 5);
+    int a = excel->createExcelFile(deviceId, columns, 9);
     if (a == 0) {
         Serial.println("Excel file already exists :D");
     } else if (a == 1) {
