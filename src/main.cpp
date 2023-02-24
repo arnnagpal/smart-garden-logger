@@ -63,18 +63,18 @@ void setup() {
     // "Item[]" : 5
     // "Item[]" : 19
 
-    String data[] = {
-            ExcelEESD::getTime(),
-            "40",
-            "20",
-            "19.1",
-            "742",
-            "18.88",
-            "0.01",
-            "5",
-            "19"
-    };
-    excel->writeToExcelFile(deviceId, data, 9);
+//    String data[] = {
+//            ExcelEESD::getTime(),
+//            "40",
+//            "20",
+//            "19.1",
+//            "742",
+//            "18.88",
+//            "0.01",
+//            "5",
+//            "19"
+//    };
+//    excel->writeToExcelFile(deviceId, data, 9);
 }
 
 String getValue(const String &data, char separator, int index) {
