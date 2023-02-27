@@ -18,7 +18,8 @@ const String columns[] = {
         "S Temperature",
         "UV Light",
         "VIS Light",
-        "IR Light"
+        "IR Light",
+        "Pumped"
 
 };
 
@@ -110,6 +111,7 @@ void loop() {
             String uVK = getValue(ardData, ';', 5);
             String vIK = getValue(ardData, ';', 6);
             String iRK = getValue(ardData, ';', 7);
+            String pK = getValue(ardData, ';', 8);
 
 
             String eH = getValue(eHK, '=', 1);
@@ -120,6 +122,7 @@ void loop() {
             String uV = getValue(uVK, '=', 1);
             String vI = getValue(vIK, '=', 1);
             String iR = getValue(iRK, '=', 1);
+            String p = getValue(pK, ';', 1);
 
             eH.trim();
             eT.trim();
@@ -129,6 +132,7 @@ void loop() {
             uV.trim();
             vI.trim();
             iR.trim();
+            p.trim();
 
             String data[] = {
                     ExcelEESD::getTime(),
@@ -139,7 +143,8 @@ void loop() {
                     sT,
                     uV,
                     vI,
-                    iR
+                    iR,
+                    p
             };
             excel->writeToExcelFile(deviceId, data, 9);
 
