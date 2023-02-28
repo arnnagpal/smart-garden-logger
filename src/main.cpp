@@ -1,12 +1,10 @@
 #include <Arduino.h>
 #include <ESP8266WebServer.h>
 #include "ExcelEESD.h"
+#include "network_details.h"
 
 ESP8266WebServer server(80);
 
-// Replace with your network credentials
-const char *ssid = "NETWORK-NAME";
-const char *pass = "NETWORK-PASS";
 const String deviceId = "data-test-2";
 
 const String columns[] = {
