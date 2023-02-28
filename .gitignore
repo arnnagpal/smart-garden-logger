@@ -2,4 +2,5 @@
 .idea
 CMakeLists.txt
 CMakeListsPrivate.txt
-cmake-build-*/ 
+cmake-build-*/
+include/network_details.h
