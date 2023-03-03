@@ -17,7 +17,7 @@ const String columns[] = {
         "UV Light",
         "VIS Light",
         "IR Light",
-        "Pumped"
+        "Pump Burst (1s)"
 
 };
 
@@ -33,13 +33,12 @@ void setup() {
     while (!Serial) { ;  // wait for serial port to connect. Needed for native USB port only
     }
     excel = new ExcelEESD(ssid, pass);
-    while (!excel->connected()) { ;
-    }
+    while (!excel->connected());
 
     server.on("/", webpage);
     server.begin();
 
-    int a = excel->createExcelFile(deviceId, columns, 9);
+    int a = excel->createExcelFile(deviceId, columns, 10);
     if (a == 0) {
         Serial.println("Excel file already exists :D");
     } else if (a == 1) {
@@ -120,7 +119,7 @@ void loop() {
             String uV = getValue(uVK, '=', 1);
             String vI = getValue(vIK, '=', 1);
             String iR = getValue(iRK, '=', 1);
-            String p = getValue(pK, ';', 1);
+            String p = getValue(pK, '=', 1);
 
             eH.trim();
             eT.trim();
@@ -144,7 +143,7 @@ void loop() {
                     iR,
                     p
             };
-            excel->writeToExcelFile(deviceId, data, 9);
+            excel->writeToExcelFile(deviceId, data, 10);
 
             ardData = "";
         } else {

@@ -67,6 +67,8 @@ ExcelEESD::ExcelEESD(const char *ssid, const char *password)
         Serial.println("esp8266/Arduino CI has failed");
     }
 
+    Serial.println();
+
     Serial.flush();
 
     delay(5000);
@@ -104,7 +106,7 @@ String ExcelEESD::getTime() {
     return time;
 }
 
-int ExcelEESD::createExcelFile(const String& fileName, const String columnNames[], int columns) {
+int ExcelEESD::createExcelFile(const String &fileName, const String columnNames[], int columns) {
     if ((WiFiMulti.run() != WL_CONNECTED)) {
         Serial.println("Not connected");
         return -1;
@@ -159,7 +161,7 @@ int ExcelEESD::createExcelFile(const String& fileName, const String columnNames[
     return -1;
 }
 
-JSONVar ExcelEESD::readExcelFile(const String& file) {
+JSONVar ExcelEESD::readExcelFile(const String &file) {
     if ((WiFiMulti.run() != WL_CONNECTED)) {
         Serial.println("Not connected");
         return null;
@@ -192,7 +194,7 @@ JSONVar ExcelEESD::readExcelFile(const String& file) {
     return null;
 }
 
-bool ExcelEESD::writeToExcelFile(const String& fileName, String data[], int length) {
+bool ExcelEESD::writeToExcelFile(const String &fileName, String data[], int length) {
     if ((WiFiMulti.run() != WL_CONNECTED)) {
         Serial.println("Not connected");
         return false;
@@ -245,7 +247,7 @@ String ExcelEESD::getMessage(JSONVar obj) {
     return "Error";
 }
 
-JSONVar ExcelEESD::postRequest(const String& endpoint, const JSONVar& body) {
+JSONVar ExcelEESD::postRequest(const String &endpoint, const JSONVar &body) {
     if (!client.connect(eesd_host, eesd_port)) {
         Serial.println("Connection failed");
         return null;
@@ -254,34 +256,45 @@ JSONVar ExcelEESD::postRequest(const String& endpoint, const JSONVar& body) {
     }
 
     String jsonString = JSON.stringify(body);
+    Serial.println("jsonString = " + jsonString);
     String contentType = "application/json";
     String request = "POST " + endpoint + " HTTP/1.1\r\n";
     request += "Host: " + String(eesd_host) + "\r\n";
+    request += "User-Agent: ESP8266\r\n";
+    request += "Connection: close\r\n";
     request += "Content-Type: " + String(contentType) + "\r\n";
-    request += "Content-Length: " + String(jsonString.length()) + "\r\n";
-    request += "Connection: close\r\n\r\n";
+    request += "Content-Length: " + String(jsonString.length()) + "\r\n\r\n";
     request += jsonString;
 
     Serial.println("making POST request to " + endpoint);
     client.print(request);
 
+    delay(500);
+
+    String response;
+    // read and print response body
+    Serial.println();
     while (client.available()) {
         String line = client.readStringUntil('\n');
         if (line == "\r") {
+            Serial.println("headers received");
             break;
         }
     }
-    String line = client.readStringUntil('\n');
-    JSONVar obj = JSON.parse(line);
+
+    response = client.readStringUntil('\n');
+    Serial.print("Response: ");
+    Serial.println(response);
+    JSONVar obj = JSON.parse(response);
     if (JSON.typeof(obj) == "undefined") {
-        Serial.println("Parsing JSON failed: " + line);
+        Serial.println("Parsing JSON failed: " + response);
         return null;
     }
 
     return obj;
 }
 
-JSONVar ExcelEESD::getRequest(const String& endpoint) {
+JSONVar ExcelEESD::getRequest(const String &endpoint) {
     if (!client.connect(eesd_host, eesd_port)) {
         Serial.println("Connection failed");
         return null;
